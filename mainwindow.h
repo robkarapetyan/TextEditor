@@ -15,6 +15,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
 
+    int scaling = 100;
 private slots:
     void on_actionopen_triggered();
 
@@ -27,7 +28,7 @@ private slots:
     void on_actionundo_triggered();
 
     void on_actionredo_triggered();
-
+    void scaling_received(int);
 private:
     QVector<std::pair<int,int>> vec_for_found_substring_coordinates = {};
     QString current_file = "";

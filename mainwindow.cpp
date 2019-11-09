@@ -13,6 +13,17 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+//    ui->centralwidget->setStyleSheet("QWidget { background-color: gray; }");
+//    ui->plainTextEdit->setStyleSheet("QPlainTextEdit {background-color: yellow}");
+    ui->plainTextEdit->setBackgroundVisible(false);
+
+
+    ui->spinBox->setSuffix("%");
+    ui->spinBox->setRange(40, 200);
+    ui->spinBox->setValue(100);
+    ui->spinBox->setSingleStep(10);
+
+    connect(ui->spinBox, SIGNAL(valueChanged(int)), this,SLOT( scaling_received(int)));
 }
 
 MainWindow::~MainWindow()
@@ -24,7 +35,10 @@ void MainWindow::on_actionopen_triggered()
 {
     stuff_to_find = "";
 
-    QString fileName = QFileDialog::getOpenFileName(nullptr, "Open", QString(),"(*.txa)");
+    QString fileName = QFileDialog::getOpenFileName(nullptr, "Open", QString(),tr("Text Documents (*.txt *.txa)"));
+    if(fileName == ""){
+        return;
+    }
     QFile file(fileName);
 
     if (!file.open(QIODevice::ReadOnly | QFile::Text)) {
@@ -44,7 +58,7 @@ void MainWindow::on_actionsave_as_triggered()
 {
     stuff_to_find = "";
 
-    QString fileName = QFileDialog::getSaveFileName(this, "Save as", QString(),"(*.txa)");
+    QString fileName = QFileDialog::getSaveFileName(this, "Save as", QString(),tr("Text Documents (*.txt *.txa)"));
     QFile file(fileName);
     if (!file.open(QIODevice::WriteOnly | QFile::Text)) {
         if(file.errorString() != "No file name specified"){
@@ -116,13 +130,21 @@ void MainWindow::on_actionfind_triggered()
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     if(QGuiApplication::queryKeyboardModifiers().testFlag(Qt::ControlModifier)){
+        if(event->key() == Qt::Key::Key_S){
+            on_actionsave_triggered();
+            qDebug("ctrl + s");
+        }
         if(event->key() == Qt::Key::Key_F){
             on_actionfind_triggered();
         }
+
     }
+
     else if(event->key() == Qt::Key::Key_F5){
         on_actionfind_triggered();
     }
+
+
     QWidget::keyPressEvent(event);
 }
 
@@ -134,4 +156,15 @@ void MainWindow::on_actionundo_triggered()
 void MainWindow::on_actionredo_triggered()
 {
     ui->plainTextEdit->redo();
+}
+
+void MainWindow::scaling_received(int a)
+{
+    if(a > scaling){
+        ui->plainTextEdit->zoomIn();
+    }
+    else{
+        ui->plainTextEdit->zoomOut();
+    }
+    scaling = a;
 }
