@@ -1,34 +1,62 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "propdialog.h"
 #include <QFile>
 #include <QFileDialog>
 #include <QTextStream>
 #include <QMessageBox>
 #include <QTextBlock>
 #include <QInputDialog>
-
+#include <QTextCodec>
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setWindowTitle("Text Editor0_o");
 //    ui->centralwidget->setStyleSheet("QWidget { background-color: gray; }");
 //    ui->plainTextEdit->setStyleSheet("QPlainTextEdit {background-color: yellow}");
     ui->plainTextEdit->setBackgroundVisible(false);
 
+    lb = new QLabel("",ui->plainTextEdit, Qt::SplashScreen  |  Qt::WindowStaysOnTopHint);
 
     ui->spinBox->setSuffix("%");
-    ui->spinBox->setRange(40, 200);
+    ui->spinBox->setRange(50, 300);
     ui->spinBox->setValue(100);
     ui->spinBox->setSingleStep(10);
 
     connect(ui->spinBox, SIGNAL(valueChanged(int)), this,SLOT( scaling_received(int)));
+
+    connect(ui->plainTextEdit, SIGNAL(cursorPositionChanged()), this, SLOT(update_labels()));
+
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::wheelEvent(QWheelEvent *event)
+{
+    if(QGuiApplication::queryKeyboardModifiers().testFlag(Qt::ControlModifier))
+    {
+        if(event->delta() >= 0){
+            ui->spinBox->setValue(ui->spinBox->value() + 5);
+        }
+        else{
+            ui->spinBox->setValue(ui->spinBox->value() - 5);
+        }
+        lb->setText(ui->spinBox->text());
+        lb->setAlignment(Qt::AlignCenter);
+        lb->setGeometry(this->pos().x() + this->width() /2, this->pos().y() + this->height() / 2, 50,50);
+        lb->show();
+        QTimer::singleShot(1000, lb,  &QLabel::hide);
+
+        return;
+    }
+    MainWindow::wheelEvent(event);
 }
 
 void MainWindow::on_actionopen_triggered()
@@ -132,7 +160,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     if(QGuiApplication::queryKeyboardModifiers().testFlag(Qt::ControlModifier)){
         if(event->key() == Qt::Key::Key_S){
             on_actionsave_triggered();
-            qDebug("ctrl + s");
         }
         if(event->key() == Qt::Key::Key_F){
             on_actionfind_triggered();
@@ -167,4 +194,28 @@ void MainWindow::scaling_received(int a)
         ui->plainTextEdit->zoomOut();
     }
     scaling = a;
+}
+
+void MainWindow::update_labels()
+{
+    ui->column->setText(QStringLiteral("Col: %1").arg(ui->plainTextEdit->textCursor().columnNumber() + 1));
+    ui->line->setText(QStringLiteral("line: %1 ,").arg(ui->plainTextEdit->textCursor().blockNumber() + 1));
+}
+
+
+void MainWindow::on_actionproperties_triggered()
+{
+    auto* pd = new PropDialog(this);
+    pd->show();
+    connect(pd, SIGNAL(property_to_set(EditorProperty)), this, SLOT(set_properties(EditorProperty)));
+}
+
+void MainWindow::set_properties(EditorProperty prop)
+{
+    QPalette p = ui->plainTextEdit->palette();
+    p.setColor(QPalette::Base, prop.background_color);
+    p.setColor(QPalette::Text, prop.text_color);
+
+    ui->plainTextEdit->setPalette(p);
+    ui->plainTextEdit->setFont(prop.text_font);
 }

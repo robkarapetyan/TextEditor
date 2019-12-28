@@ -24,10 +24,7 @@
     <property name="rightMargin">
      <number>0</number>
     </property>
-    <property name="bottomMargin">
-     <number>0</number>
-    </property>
-    <property name="verticalSpacing">
+    <property name="spacing">
      <number>0</number>
     </property>
     <item row="0" column="0">
@@ -43,17 +40,17 @@
       </property>
       <property name="font">
        <font>
-        <pointsize>8</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="inputMethodHints">
        <set>Qt::ImhMultiLine</set>
       </property>
       <property name="frameShape">
-       <enum>QFrame::HLine</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Plain</enum>
       </property>
       <property name="lineWidth">
        <number>0</number>
@@ -71,8 +68,7 @@
        <enum>QPlainTextEdit::NoWrap</enum>
       </property>
       <property name="plainText">
-       <string>jdnjds
-</string>
+       <string/>
       </property>
       <property name="overwriteMode">
        <bool>false</bool>
@@ -94,6 +90,48 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
+          <width>644</width>
+          <height>17</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="line">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Line : 0 ,</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="column">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Col : 0</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
           <width>40</width>
           <height>20</height>
          </size>
@@ -104,6 +142,12 @@
        <widget class="scale_selector" name="spinBox">
         <property name="frame">
          <bool>false</bool>
+        </property>
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::PlusMinus</enum>
+        </property>
+        <property name="prefix">
+         <string> </string>
         </property>
        </widget>
       </item>
@@ -137,6 +181,8 @@
     <addaction name="actionredo"/>
     <addaction name="separator"/>
     <addaction name="actionfind"/>
+    <addaction name="separator"/>
+    <addaction name="actionproperties"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -180,6 +226,16 @@
   <action name="actionfind">
    <property name="text">
     <string>find</string>
+   </property>
+  </action>
+  <action name="actionproperties">
+   <property name="text">
+    <string>properties</string>
+   </property>
+  </action>
+  <action name="actionfind_forward">
+   <property name="text">
+    <string>find forward</string>
    </property>
   </action>
  </widget>

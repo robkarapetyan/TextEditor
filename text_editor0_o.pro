@@ -16,16 +16,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    editorproperty.cpp \
     main.cpp \
     mainwindow.cpp \
+    propdialog.cpp \
     ui_elements/scale_selector.cpp
 
 HEADERS += \
+    editorproperty.h \
     mainwindow.h \
+    propdialog.h \
     ui_elements/scale_selector.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    propdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
